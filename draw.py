@@ -1,7 +1,6 @@
 import random
 
 def createDraw(names):
-    #TODO: Ensure each team has 3 byes and plays 24 games.
     rounds = []
 
     avaliableForBye = []
@@ -12,6 +11,7 @@ def createDraw(names):
         matches = []
         avaliableTeams = names.copy()
 
+        # For each round, generate the team that has the bye, based off this update the teams that can be picked for matches and can be picked for byes
         byeResult = generateByes(x, avaliableTeams, avaliableForBye)
         for team in byeResult[0]:
             matches.append([team, "Bye"])
@@ -23,18 +23,14 @@ def createDraw(names):
             avaliableTeams.remove(team)
             opponent = random.choice(avaliableTeams)
             avaliableTeams.remove(opponent)
-            matches.append([team, opponent])
-
-        # If there's one team left, add them to a "bye" match
-        if len(avaliableTeams) == 1:
-            matches.append([avaliableTeams[0], "Bye"])
-            
-        
+            matches.append([team, opponent]) 
         rounds.append(matches)
     return rounds
 
 def generateByes(round, avaliableTeams, avaliableForBye):
     byeTeams = []
+    # Number of teams with a bye per round are picked based on actual NRL draw.
+    # For each round we pick valid teams and then update the teams that can still be picked for matches and byes based on that.
     if round == 13 or round == 16 or round == 19:
         while len(byeTeams) < 7:
             validTeams = pickTeams(avaliableTeams, avaliableForBye)
@@ -58,6 +54,7 @@ def generateByes(round, avaliableTeams, avaliableForBye):
 def pickTeams(avaliableTeams, avaliableForBye):
     validTeam = False
     while not validTeam:
+        # Randomly generates a team, checks if it can be used for a bye and then updates the amount of byes. If the team has three byes, removes it from the list.
         team = random.choice(avaliableTeams)
         for value in avaliableForBye:
             if value[0] == team:
