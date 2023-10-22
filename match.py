@@ -1,8 +1,8 @@
 import random
 
-def scoreGenerator():
-    homeScore = tryGenerator()
-    awayScore = tryGenerator()
+def generateScore():
+    homeScore = generateTries()
+    awayScore = generateTries()
     extraTime = False
     didDraw = False
     
@@ -26,10 +26,10 @@ def scoreGenerator():
                     awayScore +=4                   
         else:                                                                   
             didDraw = True
-            
     return([homeScore, awayScore, extraTime, didDraw])
 
-def tryGenerator():
+#TODO: Add field goals
+def generateTries():
     # Randomly pick if a team scores or not with the team scoring being 80% likely.
     tryScored = random.choices([True, False], weights=(80,20))
     if tryScored[0]:

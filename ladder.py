@@ -1,4 +1,4 @@
-def ladder(teams):
+def printLadder(teams):
     teams.sort(key=lambda x: (x.points, x.differential),  reverse=True)
     count = 1
 

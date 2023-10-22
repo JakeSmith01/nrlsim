@@ -1,7 +1,8 @@
 import random
 from team import Team
-from match import scoreGenerator
-from ladder import ladder
+from match import generateScore
+from ladder import printLadder
+from draw import createDraw
 
 def main():
     namesFile = open("teams.txt", "r")
@@ -13,24 +14,7 @@ def main():
         teamObject = Team(name, 0, 0, 0, 0, 0, 0, 0, 0, 0)
         teams.append(teamObject)
     
-    #TODO: Ensure each team has 3 byes and plays 24 games.
-    rounds = []
-    for x in range (1,28):
-        matches = []
-        avaliableTeams = names.copy()
-
-        while len(avaliableTeams) > 1:
-            team = random.choice(avaliableTeams)
-            avaliableTeams.remove(team)
-            opponent = random.choice(avaliableTeams)
-            avaliableTeams.remove(opponent)
-            matches.append([team, opponent])
-
-        # If there's one team left, add them to a "bye" match
-        if len(avaliableTeams) == 1:
-            matches.append([avaliableTeams[0], "Bye"])
-        
-        rounds.append(matches)
+    rounds = createDraw(names)
 
     for round in rounds:
         for match in round:
@@ -42,7 +26,7 @@ def main():
                         x.byes += 1
                         break
             else:
-                scores = scoreGenerator()
+                scores = generateScore()
                 #TODO: Is there a better way to format the extra time? Is it necessary?
                 # if scores[2]:
                 #     print("Extra Time!")
@@ -64,7 +48,7 @@ def main():
                     if homeUpdated and awayUpdated:
                         break
     
-    ladder(teams)
+    printLadder(teams)
         
 def updateStats(team, pointsFor, pointsAgainst):
     team.pointsFor += pointsFor
