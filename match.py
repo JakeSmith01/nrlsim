@@ -26,8 +26,8 @@ def scoreGenerator():
                     awayScore +=4                   
         else:                                                                   
             didDraw = True
-    else:
-        return([homeScore, awayScore, extraTime, didDraw])
+            
+    return([homeScore, awayScore, extraTime, didDraw])
 
 def tryGenerator():
     # Randomly pick if a team scores or not with the team scoring being 80% likely.
