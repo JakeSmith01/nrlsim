@@ -34,6 +34,7 @@ def main():
 
     for round in rounds:
         for match in round:
+            # If team has a bye, they dont play a real team and just get two points.
             if match[1] == "Bye":
                 for x in teams:
                     if x.name == match[0]:
@@ -52,47 +53,31 @@ def main():
                 #TODO: See if there is a better way to do this.
                 homeUpdated = False
                 awayUpdated = False
-                homeWinner = False
-                awayWinner = False
-
-                if scores[0] > scores[1]:
-                    homeWinner = True
-                elif scores[0] < scores[1]:
-                    awayWinner = True
 
                 for x in teams:
                     if x.name == match[0]:
-                        points = 0
-                        if homeWinner:
-                            points = 2
-                        elif scores[3]:
-                            points = 1
-                        updateStats(x, scores[0], scores[1], points)
+                        updateStats(x, scores[0], scores[1])
                         homeUpdated = True
                     elif x.name == match[1]:
-                        points = 0
-                        if awayWinner:
-                            points = 2
-                        elif scores[3]:
-                            points = 1
-                        updateStats(x, scores[1], scores[0], points)
+                        updateStats(x, scores[1], scores[0])
                         awayUpdated = True
                     if homeUpdated and awayUpdated:
                         break
     
     ladder(teams)
         
-def updateStats(team, pointsFor, pointsAgainst, points):
+def updateStats(team, pointsFor, pointsAgainst):
     team.pointsFor += pointsFor
     team.pointsAgainst += pointsAgainst
     team.differential = team.pointsFor - team.pointsAgainst
-    team.points += points
-    if points == 2:
+    if pointsFor > pointsAgainst:
         team.wins += 1
-    elif points == 1:
-        team.draws += 1
-    elif points == 0:
+        team.points += 2
+    elif pointsFor < pointsAgainst:
         team.losses += 1
+    else:
+        team.draws += 1
+        team.points += 1
     team.played += 1
 
 main()
