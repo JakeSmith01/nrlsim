@@ -47,6 +47,11 @@ def generateTries():
             tries = random.randint(11,16)
         # Randomly determine how many tries are converted.
         convertedTries = random.randint(0,tries)
-        return((tries * 4) + (convertedTries * 2))
+        fgKicked = random.choices([True, False], weights=(5,95))
+        goalsKicked = 0
+        if fgKicked[0]:
+            goalsKickedChoice = random.choices([1, 2, 3], weights=(90, 9, 1))
+            goalsKicked = goalsKickedChoice[0]
+        return((tries * 4) + (convertedTries * 2) + goalsKicked)
     else:
         return(0)

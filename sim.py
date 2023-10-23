@@ -47,7 +47,7 @@ def main():
                         awayUpdated = True
                     if homeUpdated and awayUpdated:
                         break
-    
+    #TODO: Add finals, add functionality to allow users to see scores per round and see the ladder after each round.
     printLadder(teams)
         
 def updateStats(team, pointsFor, pointsAgainst):
