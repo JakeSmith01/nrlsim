@@ -1,15 +1,15 @@
-import random
 from team import Team
 from match import generateScore
 from ladder import printLadder
 from draw import createDraw
+from format import Format
 
 def main():
     namesFile = open("teams.txt", "r")
     names = [name.strip() for name in namesFile]
     teams = []
 
-    # Initalise up all the team objects
+    # Initalise all the team objects
     for name in names:
         teamObject = Team(name, 0, 0, 0, 0, 0, 0, 0, 0, 0)
         teams.append(teamObject)
@@ -26,15 +26,8 @@ def main():
                         x.byes += 1
                         break
             else:
-                scores = generateScore()
-                #TODO: Is there a better way to format the extra time? Is it necessary?
-                # if scores[2]:
-                #     print("Extra Time!")
-                # print(match[0] + ": " + str(scores[0]))
-                # print(match[1] + ": " + str(scores[1]))
-                # print(" ")
-                
-                #TODO: See if there is a better way to do this.
+                scores = generateScore(False)
+
                 homeUpdated = False
                 awayUpdated = False
 
@@ -49,6 +42,142 @@ def main():
                         break
     #TODO: Add finals, add functionality to allow users to see scores per round and see the ladder after each round.
     printLadder(teams)
+
+    teams.sort(key=lambda x: (x.points, x.differential),  reverse=True)
+
+    finalsTeams = []
+    for x in range(0,8):
+        finalsTeams.append(teams[x].name)
+    matchesWeekOne = [[finalsTeams[0], finalsTeams[3]], [finalsTeams[1], finalsTeams[2]], [finalsTeams[4], finalsTeams[7]], [finalsTeams[5], finalsTeams[6]]]
+    matchesWeekTwo = [[],[]]
+    matchesWeekThree = [[],[]]
+
+    print(" ")
+    print("Finals Week 1")
+    count = 1
+    for match in matchesWeekOne:
+        print(" ")
+        print(Format.underline + (match[0] + "(H) VS " + match[1]) + "(A)" + Format.end)
+        
+        scores = generateScore(True)
+        winnerHome = False
+        winnerAway = False
+
+        if scores[0] > scores[1]:
+            winnerHome = True
+        elif scores[0] < scores[1]:
+            winnerAway = True
+
+        print(match[0] + ": " + str(scores[0]))
+        print(match[1] + ": " + str(scores[1]))
+
+        if count == 1:
+            if winnerHome:
+                matchesWeekTwo[0].append(match[1])
+                matchesWeekThree[0].append(match[0])
+            elif winnerAway:
+                matchesWeekTwo[0].append(match[0])
+                matchesWeekThree[0].append(match[1])
+        elif count == 2:
+            if winnerHome:
+                matchesWeekTwo[0].append(match[0])
+            elif winnerAway:
+                matchesWeekTwo[0].append(match[1])
+        elif count == 3:
+            if winnerHome:
+                matchesWeekTwo[1].append(match[0])
+            elif winnerAway:
+                matchesWeekTwo[1].append(match[1])
+        elif count == 4:
+            if winnerHome:
+                matchesWeekTwo[1].insert(0, match[1])
+                matchesWeekThree[1].append(match[0])
+            elif winnerAway:
+                matchesWeekTwo[1].insert(0, match[0])
+                matchesWeekThree[1].append(match[1])
+        count += 1
+    
+    print(" ")
+    print("Semi Finals")
+    count = 1
+    for match in matchesWeekTwo:
+        print(" ")
+        print(Format.underline + (match[0] + "(H) VS " + match[1]) + "(A)" + Format.end)
+
+        scores = generateScore(True)
+        winnerHome = False
+        winnerAway = False
+
+        if scores[0] > scores[1]:
+            winnerHome = True
+        elif scores[0] < scores[1]:
+            winnerAway = True
+
+        print(match[0] + ": " + str(scores[0]))
+        print(match[1] + ": " + str(scores[1]))
+
+        if count == 1:
+            if winnerHome:
+                matchesWeekThree[1].append(match[0])
+            elif winnerAway:
+                matchesWeekThree[1].append(match[1])
+        else:
+            if winnerHome:
+                matchesWeekThree[0].append(match[0])
+            elif winnerAway:
+                matchesWeekThree[0].append(match[1])
+        count += 1
+    
+    print(" ")
+    print("Preliminary Finals")
+    grandFinal = []
+    for match in matchesWeekThree:
+        print(" ")
+        print(Format.underline + (match[0] + "(H) VS " + match[1]) + "(A)" + Format.end)
+
+        scores = generateScore(True)
+        winnerHome = False
+        winnerAway = False
+
+        if scores[0] > scores[1]:
+            winnerHome = True
+        elif scores[0] < scores[1]:
+            winnerAway = True
+
+        print(match[0] + ": " + str(scores[0]))
+        print(match[1] + ": " + str(scores[1]))
+
+        if winnerHome:
+            grandFinal.append(match[0])
+        elif winnerAway:
+            grandFinal.append(match[1])
+    
+    print(" ")
+    print("Grand Final")
+    print(" ")
+    print(Format.underline + (grandFinal[0] + " VS " + grandFinal[1]) + Format.end)
+
+    scores = generateScore(True)
+    winnerHome = False
+    winnerAway = False
+
+    if scores[0] > scores[1]:
+        winnerHome = True
+    elif scores[0] < scores[1]:
+        winnerAway = True
+
+    print(grandFinal[0] + ": " + str(scores[0]))
+    print(grandFinal[1] + ": " + str(scores[1]))
+
+    print(" ")
+
+    if winnerHome:
+        print(grandFinal[0].upper() + " WIN THE GRAND FINAL")
+    elif winnerAway:
+        print(grandFinal[1].upper() + " WIN THE GRAND FINAL")
+
+    
+
         
 def updateStats(team, pointsFor, pointsAgainst):
     team.pointsFor += pointsFor
