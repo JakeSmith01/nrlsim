@@ -1,6 +1,6 @@
 import random
 
-def generateScore():
+def generateScore(isFinals):
     homeScore = generateTries()
     awayScore = generateTries()
     extraTime = False
@@ -11,7 +11,7 @@ def generateScore():
         drew = random.choices([True, False], weights=(5,95))
         extraTime = True
         # If teams dont draw, decide winning method and winning team
-        if drew[0] == False:
+        if drew[0] == False or isFinals:
             winMethod = random.choices(["fg", "try"], weights=(80,20))
             winner = random.choice(["home", "away"])
             if winMethod[0] == "fg":
@@ -28,7 +28,6 @@ def generateScore():
             didDraw = True
     return([homeScore, awayScore, extraTime, didDraw])
 
-#TODO: Add field goals
 def generateTries():
     # Randomly pick if a team scores or not with the team scoring being 80% likely.
     tryScored = random.choices([True, False], weights=(80,20))
